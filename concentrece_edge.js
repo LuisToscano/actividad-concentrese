@@ -17,7 +17,9 @@
         ],
         scripts = [
             js+"jquery-1.10.2.js",
-            js+"main.js"
+            js+"main.js",
+            js+"timerUtilities.js",
+            js+"utility.js"
         ],
         symbols = {
             "stage": {
@@ -58,6 +60,12 @@
                             symbolName: 'btn_submit',
                             type: 'rect',
                             rect: ['630', '351', '200', '177', 'auto', 'auto']
+                        },
+                        {
+                            id: 'TIMER_CONTAINER',
+                            symbolName: 'testBtn',
+                            type: 'rect',
+                            rect: ['62px', '83px', '228', '56', 'auto', 'auto']
                         }
                     ],
                     style: {
@@ -70,10 +78,29 @@
                     }
                 },
                 timeline: {
-                    duration: 500,
+                    duration: 511,
                     autoPlay: true,
                     data: [
-
+                        [
+                            "eid52",
+                            "left",
+                            250,
+                            0,
+                            "linear",
+                            "${TIMER_CONTAINER}",
+                            '62px',
+                            '62px'
+                        ],
+                        [
+                            "eid53",
+                            "top",
+                            250,
+                            0,
+                            "linear",
+                            "${TIMER_CONTAINER}",
+                            '83px',
+                            '83px'
+                        ]
                     ]
                 }
             },
@@ -317,8 +344,7 @@
                     ],
                     style: {
                         '${symbolSelector}': {
-                            isStage: 'true',
-                            rect: [undefined, undefined, '200px', '177px']
+                            rect: [null, null, '200px', '177px']
                         }
                     }
                 },
@@ -327,6 +353,95 @@
                     autoPlay: true,
                     data: [
 
+                    ]
+                }
+            },
+            "testBtn": {
+                version: "6.0.0",
+                minimumCompatibleVersion: "5.0.0",
+                build: "6.0.0.400",
+                scaleToFit: "none",
+                centerStage: "none",
+                resizeInstances: false,
+                content: {
+                    dom: [
+                        {
+                            rect: ['57px', '-28px', '113px', '113px', 'auto', 'auto'],
+                            borderRadius: ['50%', '50%', '50%', '50%'],
+                            id: 'Ellipse',
+                            stroke: [3, 'rgba(88,20,130,1.00)', 'solid'],
+                            type: 'ellipse',
+                            fill: ['rgba(196,170,220,1.00)']
+                        },
+                        {
+                            rect: ['111px', '21px', '13px', '13px', 'auto', 'auto'],
+                            borderRadius: ['50%', '50%', '50%', '50%'],
+                            id: 'Ellipse3',
+                            stroke: [0, 'rgb(0, 0, 0)', 'none'],
+                            type: 'ellipse',
+                            fill: ['rgba(255,255,255,0.86)']
+                        },
+                        {
+                            rect: ['115px', '10px', '5px', '44px', 'auto', 'auto'],
+                            transform: [[], ['360']],
+                            id: 'Rectangle2',
+                            stroke: [0, 'rgb(0, 0, 0)', 'none'],
+                            type: 'rect',
+                            fill: ['rgba(255,255,255,0.56)']
+                        },
+                        {
+                            rect: ['18px', '17px', '200px', '42px', 'auto', 'auto'],
+                            id: 'Text',
+                            text: '<p style=\"margin: 0px; text-align: center;\"><span style=\"font-weight: 700;\">TIMER</span></p>',
+                            font: ['Arial, Helvetica, sans-serif', [24, ''], 'rgba(0,0,0,1)', 'normal', 'none', '', 'break-word', 'normal'],
+                            type: 'text'
+                        }
+                    ],
+                    style: {
+                        '${symbolSelector}': {
+                            isStage: 'true',
+                            rect: [undefined, undefined, '228px', '56px']
+                        }
+                    }
+                },
+                timeline: {
+                    duration: 511,
+                    autoPlay: true,
+                    labels: {
+                        "normal": 0,
+                        "0": 511
+                    },
+                    data: [
+                        [
+                            "eid118",
+                            "rotateZ",
+                            0,
+                            500,
+                            "linear",
+                            "${Rectangle2}",
+                            '0deg',
+                            '360deg'
+                        ],
+                        [
+                            "eid22",
+                            "color",
+                            0,
+                            250,
+                            "linear",
+                            "${Text}",
+                            'rgba(0,0,0,1)',
+                            'rgba(0,0,0,1.00)'
+                        ],
+                        [
+                            "eid23",
+                            "color",
+                            250,
+                            250,
+                            "linear",
+                            "${Text}",
+                            'rgba(0,0,0,1.00)',
+                            'rgba(0,0,0,1)'
+                        ]
                     ]
                 }
             }

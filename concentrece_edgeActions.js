@@ -14,12 +14,15 @@ var Composition = Edge.Composition, Symbol = Edge.Symbol; // los alias más comu
 
       Symbol.bindSymbolAction(compId, symbolName, "creationComplete", function(sym, e) {
          // Insertar código para ejecutarse cuando el símbolo se crea aquí
-         //ed_send_data(sym);
+         ed_send_data(sym);
+         inicializarTimer(sym);
+
       });
       //Edge binding end
 
       Symbol.bindElementAction(compId, symbolName, "${carta_1_A}", "click", function(sym, e) {         
-         //sym.getSymbol("carta_1_A").playReverse("a");         
+         //sym.getSymbol("carta_1_A").playReverse("a");
+         startTimer(sym);
          carta_clickeada(sym, "carta_1_A");
 
       });
@@ -27,17 +30,20 @@ var Composition = Edge.Composition, Symbol = Edge.Symbol; // los alias más comu
 
       Symbol.bindElementAction(compId, symbolName, "${carta_1_B}", "click", function(sym, e) {
          carta_clickeada(sym, "carta_1_B");
+         startTimer(sym);
 
       });
       //Edge binding end
 
       Symbol.bindElementAction(compId, symbolName, "${carta_2_A}", "click", function(sym, e) {
+         startTimer(sym);
          carta_clickeada(sym, "carta_2_A");
 
       });
       //Edge binding end
 
       Symbol.bindElementAction(compId, symbolName, "${carta_2_B}", "click", function(sym, e) {
+         startTimer(sym);
          carta_clickeada(sym, "carta_2_B");
 
       });
@@ -140,5 +146,34 @@ var Composition = Edge.Composition, Symbol = Edge.Symbol; // los alias más comu
    
    })("btn_submit");
    //Edge symbol end:'btn_submit'
+
+   //=========================================================
+   
+   //Edge symbol: 'testBtn'
+   (function(symbolName) {   
+   
+      Symbol.bindTriggerAction(compId, symbolName, "Default Timeline", 0, function(sym, e) {
+         // introducir código aquí
+         
+
+      });
+      //Edge binding end
+
+      Symbol.bindTriggerAction(compId, symbolName, "Default Timeline", 500, function(sym, e) {
+         sym.play(0);
+
+      });
+      //Edge binding end
+
+      Symbol.bindTriggerAction(compId, symbolName, "Default Timeline", 511, function(sym, e) {
+         // introducir código aquí
+         
+         sym.stop();
+
+      });
+      //Edge binding end
+
+   })("testBtn");
+   //Edge symbol end:'testBtn'
 
 })(window.jQuery || AdobeEdge.$, AdobeEdge, "EDGE-559548");

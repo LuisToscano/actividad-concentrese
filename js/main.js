@@ -3,8 +3,12 @@
 /* Evento "default" de la plantilla donde se va a implementar esta actividad. Inicializa la actividad*/
 $('body').on('EDGE_Recurso_promiseCreated', function(evt)
 {
+    if(typeof inicializarTimer == 'function'){
+        inicializarTimer(evt.sym);
+    }
     ed_send_data(evt.sym);
 });
+
 function ed_send_data(sym) 
 {
     $.getJSON('config.json', function(json_content) {
@@ -12,6 +16,7 @@ function ed_send_data(sym)
         var stage = $(sym.getComposition().getStage().ele);
         stage.prop('ed_json_property_object', json_content);
         stage.prop('ed_user_attempts', json_content.attempts);
+        stage.prop('usa_timer', typeof inicializarTimer == 'function');
 
         for (var i = 1; i <= json_content.cant_combo_cartas; i++) {
             sym.$("carta_" + i + "_A").prop('ed_linked_to', 'carta_' + i + '_B');
@@ -59,8 +64,17 @@ $('body').on('EDGE_Recurso_sendPreviousData EDGE_Recurso_postSubmitApplied',func
         //Debe bloquear la actividad
         stage.prop('ed_blocked',true);
         clickOnHold.canYouClick = false;
+        if (stage.prop("usa_timer")) {
+            stopTimer(evt.sym);
+        }
+    }else{
+        if (stage.prop("usa_timer")) {
+            if (evt.timer.reset_timer) {
+                resetTimer(evt.sym);
+            }
+        }
     }
-
+    
     if(typeof(evt.attempts) != "undefined")
     {
         stage.prop('ed_user_attempts',evt.attempts);
@@ -214,3 +228,65 @@ function do_submit(sym)
     parent.$(parent.document).trigger(ed_obj_evt);
     return retorno_datos;
 }
+
+function do_submit_timeout(sym)
+{
+    var stage = $(sym.getComposition().getStage().ele);
+    var json_content = stage.prop("ed_json_property_object");
+    var retorno_datos = {};
+    retorno_datos.attempts_to = stage.prop('ed_user_attempts');
+    retorno_datos.user_answer = nonClickableCards;
+    retorno_datos.user_answer_score = Math.round(nonClickableCards.length / 2);
+
+    if (stage.prop('ed_blocked'))
+    {
+        return;
+    }
+
+    var ed_obj_evt = 
+    {
+        type: "EDGE_Plantilla_submitApplied",
+        interactionType: "fill-in",
+        json: json_content,
+        answer: retorno_datos.user_answer_score,
+        user_answer: retorno_datos.user_answer,
+        results: "incorrect",
+        attempts: retorno_datos.attempts_to,
+        attempts_limit: json_content.attempts,
+        sym: sym,
+        identify: stage.prop("ed_identify")
+    };
+    
+    var stage = $(sym.getComposition().getStage().ele);
+
+    var timer = {};
+    var timerObj = buscar_sym(sym, stage.prop("timer"), true);
+    timer.remaining_time = 0;
+    timer.time_out = true;
+    timer.current_state = timerObj.prop("alertState");
+    
+    ed_obj_evt.timer = timer;
+    
+    parent.$(parent.document).trigger(ed_obj_evt);
+    return retorno_datos;
+}
+
+function buscar_sym(sym, arrSymSearch, boolJQUERY) {
+    var temp = sym;
+    $.each(arrSymSearch, function (index, value) {
+        //EDGE_Plantilla.debug ? console.log(temp, index, value, arrSymSearch) : false;
+
+        if (!isEmpty(boolJQUERY) && index === arrSymSearch.length - 1) {
+            temp = temp.$(value);
+        } else {
+            temp = temp.getSymbol(value);
+        }
+
+    });
+    //EDGE_Plantilla.debug ? console.log(temp, arrSymSearch, boolJQUERY) : false;
+    return temp;
+}
+
+$("body").on("TimeOut", function (data) {
+    do_submit_timeout(data.sym);
+});
